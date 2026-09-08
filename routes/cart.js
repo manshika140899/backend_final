@@ -323,7 +323,7 @@
 
 
 
-//catgpt
+// catgpt
 // const express = require("express");
 // const router = express.Router();
 
@@ -696,55 +696,75 @@
 
 
 
-const mongoose = require("mongoose");
+const express = require("express");
+const router = express.Router();
+const Cart = require("../models/Cart");
 
-const cartSchema = new mongoose.Schema(
-  {
-    productId: {
-      type: mongoose.Schema.Types.Mixed,
-      required: true,
-    },
-
-    name: {
-      type: String,
-      required: true,
-    },
-
-    image: {
-      type: String,
-      required: true,
-    },
-
-    size: {
-      type: String,
-      default: "Large",
-    },
-
-    color: {
-      type: String,
-      default: "Green",
-    },
-
-    price: {
-      type: Number,
-      required: true,
-    },
-
-    quantity: {
-      type: Number,
-      default: 1,
-      min: 1,
-    },
-
-    discount: {
-      type: Number,
-      default: 0,
-    },
-  },
-
-  {
-    timestamps: true,
+router.get("/", async (req, res) => {
+  try {
+    const cart = await Cart.find().sort({ createdAt: -1 });
+    res.json(cart);
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch cart",
+      error: error.message,
+    });
   }
-);
+});
 
-module.exports = mongoose.model("Cart", cartSchema);
+router.post("/", async (req, res) => {
+  try {
+    const cartItem = new Cart(req.body);
+    const savedItem = await cartItem.save();
+
+    res.status(201).json(savedItem);
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to add to cart",
+      error: error.message,
+    });
+  }
+});
+
+router.put("/:id", async (req, res) => {
+  try {
+    const updatedItem = await Cart.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedItem) {
+      return res.status(404).json({ message: "Cart item not found" });
+    }
+
+    res.json(updatedItem);
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to update cart",
+      error: error.message,
+    });
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  try {
+    const deletedItem = await Cart.findByIdAndDelete(req.params.id);
+
+    if (!deletedItem) {
+      return res.status(404).json({ message: "Cart item not found" });
+    }
+
+    res.json({
+      message: "Cart item deleted successfully",
+      item: deletedItem,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to delete cart item",
+      error: error.message,
+    });
+  }
+});
+
+module.exports = router;
