@@ -1,35 +1,301 @@
-const express = require("express");
-const fs = require("fs");
-const path = require("path");
+// const express = require("express");
+// const fs = require("fs");
+// const path = require("path");
 
+// const router = express.Router();
+
+// const ordersFile = path.join(__dirname, "../data/orders.json");
+
+
+// const readOrders = () => {
+//   if (!fs.existsSync(ordersFile)) {
+//     fs.writeFileSync(ordersFile, "[]", "utf-8");
+//   }
+
+//   const data = fs.readFileSync(ordersFile, "utf-8");
+
+//   return JSON.parse(data || "[]");
+// };
+
+
+// const saveOrders = (orders) => {
+//   fs.writeFileSync(
+//     ordersFile,
+//     JSON.stringify(orders, null, 2),
+//     "utf-8"
+//   );
+// };
+
+
+// router.get("/", (req, res) => {
+//   try {
+//     const orders = readOrders();
+
+//     res.status(200).json(orders);
+//   } catch (error) {
+//     console.error("GET ORDERS ERROR:", error);
+
+//     res.status(500).json({
+//       message: "Failed to get orders",
+//     });
+//   }
+// });
+
+
+// router.get("/:id", (req, res) => {
+//   try {
+//     const orders = readOrders();
+
+//     const order = orders.find(
+//       (item) => String(item.id) === String(req.params.id)
+//     );
+
+//     if (!order) {
+//       return res.status(404).json({
+//         message: "Order not found",
+//       });
+//     }
+
+//     res.status(200).json(order);
+//   } catch (error) {
+//     console.error("GET SINGLE ORDER ERROR:", error);
+
+//     res.status(500).json({
+//       message: "Failed to get order",
+//     });
+//   }
+// });
+
+
+// router.post("/", (req, res) => {
+//   try {
+//     const orders = readOrders();
+
+//     const {
+//       customer,
+//       products,
+//       subtotal,
+//       discount,
+//       deliveryFee,
+//       total,
+//       promoCode,
+//       paymentMethod,
+//     } = req.body;
+
+
+//     if (!customer) {
+//       return res.status(400).json({
+//         message: "Customer information is required",
+//       });
+//     }
+
+//     if (!Array.isArray(products) || products.length === 0) {
+//       return res.status(400).json({
+//         message: "Order must contain at least one product",
+//       });
+//     }
+
+//     if (!customer.firstName) {
+//       return res.status(400).json({
+//         message: "First name is required",
+//       });
+//     }
+
+//     if (!customer.lastName) {
+//       return res.status(400).json({
+//         message: "Last name is required",
+//       });
+//     }
+
+//     if (!customer.email) {
+//       return res.status(400).json({
+//         message: "Email is required",
+//       });
+//     }
+
+//     if (!customer.phone) {
+//       return res.status(400).json({
+//         message: "Phone number is required",
+//       });
+//     }
+
+//     if (!customer.address) {
+//       return res.status(400).json({
+//         message: "Address is required",
+//       });
+//     }
+
+
+//     const orderId = `ORD-${Date.now()}`;
+
+
+//     const newOrder = {
+//       id: orderId,
+
+//       customer: {
+//         firstName: customer.firstName,
+//         lastName: customer.lastName,
+//         email: customer.email,
+//         phone: customer.phone,
+//         address: customer.address,
+//         city: customer.city || "",
+//         postalCode: customer.postalCode || "",
+//         country: customer.country || "Pakistan",
+//       },
+
+//       products: products.map((product) => ({
+//         productId:
+//           product.productId ??
+//           product.id ??
+//           null,
+
+//         name: product.name || "",
+
+//         image: product.image || "",
+
+//         size: product.size || "",
+
+//         color: product.color || "",
+
+//         price: Number(product.price) || 0,
+
+//         quantity: Math.max(
+//           1,
+//           Number(product.quantity) || 1
+//         ),
+
+//         discount: Number(product.discount) || 0,
+//       })),
+
+//       subtotal: Number(subtotal) || 0,
+
+//       discount: Number(discount) || 0,
+
+//       deliveryFee: Number(deliveryFee) || 0,
+
+//       total: Number(total) || 0,
+
+//       promoCode: promoCode || "",
+
+//       paymentMethod: paymentMethod || "COD",
+
+//       orderStatus: "Pending",
+
+//       createdAt: new Date().toISOString(),
+//     };
+
+
+//     orders.push(newOrder);
+
+//     saveOrders(orders);
+
+//     console.log("=================================");
+//     console.log("NEW ORDER CREATED");
+//     console.log("ORDER ID:", newOrder.id);
+//     console.log("=================================");
+
+
+//     res.status(201).json({
+//       message: "Order created successfully",
+//       order: newOrder,
+//     });
+//   } catch (error) {
+//     console.error("CREATE ORDER ERROR:", error);
+
+//     res.status(500).json({
+//       message: "Failed to create order",
+//       error: error.message,
+//     });
+//   }
+// });
+
+// router.put("/:id", (req, res) => {
+//   try {
+//     const orders = readOrders();
+
+//     const orderIndex = orders.findIndex(
+//       (item) =>
+//         String(item.id) === String(req.params.id)
+//     );
+
+//     if (orderIndex === -1) {
+//       return res.status(404).json({
+//         message: "Order not found",
+//       });
+//     }
+
+//     orders[orderIndex] = {
+//       ...orders[orderIndex],
+//       ...req.body,
+
+   
+//       id: orders[orderIndex].id,
+//     };
+
+//     saveOrders(orders);
+
+//     res.status(200).json({
+//       message: "Order updated successfully",
+//       order: orders[orderIndex],
+//     });
+//   } catch (error) {
+//     console.error("UPDATE ORDER ERROR:", error);
+
+//     res.status(500).json({
+//       message: "Failed to update order",
+//     });
+//   }
+// });
+
+
+// router.delete("/:id", (req, res) => {
+//   try {
+//     const orders = readOrders();
+
+//     const orderIndex = orders.findIndex(
+//       (item) =>
+//         String(item.id) === String(req.params.id)
+//     );
+
+//     if (orderIndex === -1) {
+//       return res.status(404).json({
+//         message: "Order not found",
+//       });
+//     }
+
+//     const deletedOrder = orders.splice(
+//       orderIndex,
+//       1
+//     )[0];
+
+//     saveOrders(orders);
+
+//     res.status(200).json({
+//       message: "Order deleted successfully",
+//       order: deletedOrder,
+//     });
+//   } catch (error) {
+//     console.error("DELETE ORDER ERROR:", error);
+
+//     res.status(500).json({
+//       message: "Failed to delete order",
+//     });
+//   }
+// });
+
+// module.exports = router;
+
+
+const express = require("express");
 const router = express.Router();
 
-const ordersFile = path.join(__dirname, "../data/orders.json");
+const Order = require("../models/Order");
+const Cart = require("../models/Cart");
 
-
-const readOrders = () => {
-  if (!fs.existsSync(ordersFile)) {
-    fs.writeFileSync(ordersFile, "[]", "utf-8");
-  }
-
-  const data = fs.readFileSync(ordersFile, "utf-8");
-
-  return JSON.parse(data || "[]");
-};
-
-
-const saveOrders = (orders) => {
-  fs.writeFileSync(
-    ordersFile,
-    JSON.stringify(orders, null, 2),
-    "utf-8"
-  );
-};
-
-
-router.get("/", (req, res) => {
+// GET ALL ORDERS
+router.get("/", async (req, res) => {
   try {
-    const orders = readOrders();
+    const orders = await Order.find().sort({ createdAt: -1 });
 
     res.status(200).json(orders);
   } catch (error) {
@@ -37,18 +303,15 @@ router.get("/", (req, res) => {
 
     res.status(500).json({
       message: "Failed to get orders",
+      error: error.message,
     });
   }
 });
 
-
-router.get("/:id", (req, res) => {
+// GET SINGLE ORDER
+router.get("/:id", async (req, res) => {
   try {
-    const orders = readOrders();
-
-    const order = orders.find(
-      (item) => String(item.id) === String(req.params.id)
-    );
+    const order = await Order.findById(req.params.id);
 
     if (!order) {
       return res.status(404).json({
@@ -62,15 +325,14 @@ router.get("/:id", (req, res) => {
 
     res.status(500).json({
       message: "Failed to get order",
+      error: error.message,
     });
   }
 });
 
-
-router.post("/", (req, res) => {
+// CREATE ORDER
+router.post("/", async (req, res) => {
   try {
-    const orders = readOrders();
-
     const {
       customer,
       products,
@@ -81,7 +343,6 @@ router.post("/", (req, res) => {
       promoCode,
       paymentMethod,
     } = req.body;
-
 
     if (!customer) {
       return res.status(400).json({
@@ -125,13 +386,31 @@ router.post("/", (req, res) => {
       });
     }
 
+    const orderProducts = products.map((product) => ({
+      productId:
+        product.productId ??
+        product.id ??
+        null,
 
-    const orderId = `ORD-${Date.now()}`;
+      name: product.name || "",
 
+      image: product.image || "",
 
-    const newOrder = {
-      id: orderId,
+      size: product.size || "Large",
 
+      color: product.color || "green",
+
+      price: Number(product.price) || 0,
+
+      quantity: Math.max(
+        1,
+        Number(product.quantity) || 1
+      ),
+
+      discount: Number(product.discount) || 0,
+    }));
+
+    const newOrder = new Order({
       customer: {
         firstName: customer.firstName,
         lastName: customer.lastName,
@@ -143,29 +422,7 @@ router.post("/", (req, res) => {
         country: customer.country || "Pakistan",
       },
 
-      products: products.map((product) => ({
-        productId:
-          product.productId ??
-          product.id ??
-          null,
-
-        name: product.name || "",
-
-        image: product.image || "",
-
-        size: product.size || "",
-
-        color: product.color || "",
-
-        price: Number(product.price) || 0,
-
-        quantity: Math.max(
-          1,
-          Number(product.quantity) || 1
-        ),
-
-        discount: Number(product.discount) || 0,
-      })),
+      products: orderProducts,
 
       subtotal: Number(subtotal) || 0,
 
@@ -177,27 +434,27 @@ router.post("/", (req, res) => {
 
       promoCode: promoCode || "",
 
-      paymentMethod: paymentMethod || "COD",
+      paymentMethod:
+        paymentMethod === "card"
+          ? "card"
+          : "cod",
 
       orderStatus: "Pending",
+    });
 
-      createdAt: new Date().toISOString(),
-    };
+    const savedOrder = await newOrder.save();
 
-
-    orders.push(newOrder);
-
-    saveOrders(orders);
+    // Clear cart after successful order
+    await Cart.deleteMany({});
 
     console.log("=================================");
     console.log("NEW ORDER CREATED");
-    console.log("ORDER ID:", newOrder.id);
+    console.log("ORDER ID:", savedOrder._id);
     console.log("=================================");
-
 
     res.status(201).json({
       message: "Order created successfully",
-      order: newOrder,
+      order: savedOrder,
     });
   } catch (error) {
     console.error("CREATE ORDER ERROR:", error);
@@ -205,70 +462,56 @@ router.post("/", (req, res) => {
     res.status(500).json({
       message: "Failed to create order",
       error: error.message,
+      errorName: error.name,
     });
   }
 });
 
-router.put("/:id", (req, res) => {
+// UPDATE ORDER STATUS
+router.put("/:id", async (req, res) => {
   try {
-    const orders = readOrders();
-
-    const orderIndex = orders.findIndex(
-      (item) =>
-        String(item.id) === String(req.params.id)
+    const updatedOrder = await Order.findByIdAndUpdate(
+      req.params.id,
+      {
+        orderStatus: req.body.orderStatus,
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
     );
 
-    if (orderIndex === -1) {
+    if (!updatedOrder) {
       return res.status(404).json({
         message: "Order not found",
       });
     }
 
-    orders[orderIndex] = {
-      ...orders[orderIndex],
-      ...req.body,
-
-   
-      id: orders[orderIndex].id,
-    };
-
-    saveOrders(orders);
-
     res.status(200).json({
       message: "Order updated successfully",
-      order: orders[orderIndex],
+      order: updatedOrder,
     });
   } catch (error) {
     console.error("UPDATE ORDER ERROR:", error);
 
     res.status(500).json({
       message: "Failed to update order",
+      error: error.message,
     });
   }
 });
 
-
-router.delete("/:id", (req, res) => {
+// DELETE ORDER
+router.delete("/:id", async (req, res) => {
   try {
-    const orders = readOrders();
+    const deletedOrder =
+      await Order.findByIdAndDelete(req.params.id);
 
-    const orderIndex = orders.findIndex(
-      (item) =>
-        String(item.id) === String(req.params.id)
-    );
-
-    if (orderIndex === -1) {
+    if (!deletedOrder) {
       return res.status(404).json({
         message: "Order not found",
       });
     }
-
-    const deletedOrder = orders.splice(
-      orderIndex,
-      1
-    )[0];
-
-    saveOrders(orders);
 
     res.status(200).json({
       message: "Order deleted successfully",
@@ -279,6 +522,7 @@ router.delete("/:id", (req, res) => {
 
     res.status(500).json({
       message: "Failed to delete order",
+      error: error.message,
     });
   }
 });
